@@ -5,8 +5,8 @@
      *           view: (dados de um form,listagem de dados, ação de excluir ou atualizar)
      *           Esse arquivo será responsável  para encaminhar as solicitações para a Controller
      * Autor: Laise junto com o professor Marcel
-     * Data: 04/03/2022   11/03/2022
-     * Versão: 1.0        2.0
+     * Data: 04/03/2022   11/03/2022    18/03/2022
+     * Versão: 1.0        2.0           3.0
      * 
      ***********************************************************************************************************/
 
@@ -27,9 +27,32 @@
             case 'CONTATOS':
                 //Importe da controller contatos
                 require_once('controller/controllerContatos.php');
-        
+                
+                //Validação para identificar o tipo de ação que será realizada
                 if($action == 'INSERIR')
-                    inserirContato($_POST);           
+                {
+                    //Chama a função de inserir na controller
+                    $resultado = inserirContato($_POST) ;
+
+                    //Valida o tipo de dados que a controller retornou
+                    if(is_bool($resultado)) //Se for booleano
+                    {
+                        //Verifica se o retorno é verdadeiro
+                        if($resultado)
+                            echo("<script>
+                                    alert ('Registro inserido com simples!');
+                                    window.location.href = 'index.php'; //volta para o caminho indicado
+                                  </script>");
+                                  
+                    //Se o retorno for um array significa houve um erro no processo de inserção
+                    }elseif(is_array($resultado)){
+                        echo("<script>
+                                alert ('".$resultado["message"]."');
+                                window.history.back(); //volta para página anterior com os dados recuperados
+                            </script>");
+                    }
+                        
+                }            
                 break;
         }
 

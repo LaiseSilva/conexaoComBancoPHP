@@ -3,8 +3,8 @@
      * Objetivo: Arquivo responsável por manipular os dados dentro do BD
      *          (insert,uptade,select e delete)
      * Autor: Laise na aula junto com o professor Marcel
-     * Data:11/03/2022   18/03/2022
-     * Versão: 1.0       2.0
+     * Data:11/03/2022   18/03/2022     25/03/2022
+     * Versão: 1.0       2.0            3.0
     **************************************************************************/
 
     //Estabelece a conexão com o BD
@@ -13,6 +13,10 @@
     //Função para realizar o insert no BD
     function insertContato($dadosContatos)
     {
+
+        //Declaração para variável para utilizar no return da função
+        $statusResposta = (boolean) false;
+
         //Abre a conexão com o BD
         $conexao = conexaoMysql();
 
@@ -37,13 +41,14 @@
         {
             //Validação para verificar se uma linha foi acrescentada no BD
             if(mysqli_affected_rows($conexao))
-                return true;
-            else
-                return false;
+                $statusResposta = true;
         }    
-        else
-            return false;
         
+            //Solicita o fechamento da conexão com o BD
+            fecharConexaoMysql($conexao);
+
+            return $statusResposta;
+       
     }
 
     
@@ -55,8 +60,28 @@
     }
     
     //Função para excluir no BD
-    function deleteContato()
+    function deleteContato($id)
     {
+        //Declaração para variável para utilizar no return da função
+        $statusResposta = (boolean) false;
+
+        //Abre a conexão com o bando de dado
+        $conexao = conexaoMysql();
+
+        //script para deletar um resgistro do BD
+        $sql = "delete from tblcontatos where idcontato=".$id;
+
+        //Valida se o script está correto, sem erro de sintaxe e executa no BD
+        if(mysqli_query($conexao, $sql))
+        {
+            //Valida se o BD teve sucesso na execução do script
+            if(mysqli_affected_rows($conexao))
+                $statusResposta = true;
+        }
+
+        //Fecha a conexão com o BD mysql
+        fecharConexaoMysql($conexao);
+        return $statusResposta;
 
     }
 
@@ -68,7 +93,7 @@
         $conexao = conexaoMysql();
 
         //script para listar todos os dados do BD
-        $sql = "select * from tblcontatos";
+        $sql = "select * from tblcontatos order by idcontato desc"; /*asc = crescente */
 
         //Executa o script sql no BD e guarda o retorno dos dados, se houver
         $result = mysqli_query($conexao, $sql);
@@ -85,6 +110,7 @@
             {
                 //Cria um array com os dados do BD
                 $arrayDados[$cont] = array (
+                    "id"       => $rsDados['idcontato'],
                     "nome"     => $rsDados['nome'],
                     "telefone" => $rsDados['telefone'],
                     "celular"  => $rsDados['celular'],
@@ -94,6 +120,9 @@
 
                 $cont++;
             }
+
+            //solicita o fechamneto da conexão com o BD
+            fecharConexaoMysql($conexao);
 
             return $arrayDados;
 

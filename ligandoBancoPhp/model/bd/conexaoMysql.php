@@ -3,8 +3,8 @@
 /**********************************************************
  * Objetivo: Arquivo para criar a conexão BD Mysql
  * Autor: Laise na aula junto com o professor Marcel
- * Data:25/02/2022
- * Versão: 1.0
+ * Data:25/02/2022      25/03/22
+ * Versão: 1.0          2.0
  ************************************************************/
 
 //constante para estabelecer a conexão com o BD (local do BD, usuário, senha e database)
@@ -29,7 +29,6 @@ function conexaoMysql()
         return false;
 }
 
-
 /*
     Existem 3 formas de criar a conexão com o BD Mysql (específico para PHP)
 
@@ -42,3 +41,10 @@ function conexaoMysql()
         PDO() - versão mais completa e eficiente para conexão com BD
             (é indicada pela segurança e POO)
 */
+
+
+//Fecha conexão com o BD Mysql
+function fecharConexaoMysql($conexao)
+{
+    mysqli_close($conexao);
+}

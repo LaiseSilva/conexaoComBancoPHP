@@ -3,8 +3,8 @@
  * Objetivo: Arquivo responsável pela manipulação de dados de contatos
  *      obs(Este arquivo a ponte entre a view e a model)
  * Autor:
- *  Data: 04/03/2022  11/03/2022  18/03/2022
- *  Versão: 1.0       2.0         3.0
+ *  Data: 04/03/2022  11/03/2022  18/03/2022  25/03/2022
+ *  Versão: 1.0       2.0         3.0         4.0
 **********************************************************************/
 
 //Todos os tratamentos são feitos através da controller
@@ -57,9 +57,24 @@ function  atualizarContato ()
 }
 
 //Função para realizaar a exclusão de um contato
-function  excluirContato ()
+function  excluirContato ($id)
 {
 
+    //Validação para verificar se id contém um número válido
+    if($id != 0 && !empty($id) && is_numeric($id))
+    {
+        //Import arquivo de contato
+        require_once('model/bd/contato.php');
+
+        //Chama a função da model e valida se o retorno foi verdadeiro ou falso
+        if (deleteContato($id))
+            return true;
+        else
+            return array ('idErro'  => 3,
+                          'message' => 'O banco de daos não pode excluir o registro');
+    }else
+        return array ('idErro'  => 3,
+                      'message' => 'Não é possível excluir um registro sem informar um id  válido');
 }
 
 //Função para solicitar os dados da model e encaminhar a lista de contatos para a view

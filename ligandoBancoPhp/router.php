@@ -5,9 +5,8 @@
      *           view: (dados de um form,listagem de dados, ação de excluir ou atualizar)
      *           Esse arquivo será responsável  para encaminhar as solicitações para a Controller
      * Autor: Laise junto com o professor Marcel
-     * Data: 04/03/2022   11/03/2022    18/03/2022
-     * Versão: 1.0        2.0           3.0
-     * 
+     * Data: 04/03/2022   11/03/2022    18/03/2022    25/03/2022
+     * Versão: 1.0        2.0           3.0           4.0
      ***********************************************************************************************************/
 
      $action = (string) null; // a ação que irá acontecer
@@ -15,11 +14,14 @@
 
 
     //Validação para verificar se a requisição é um POST de um formulário
-    if($_SERVER['REQUEST_METHOD'] == 'POST')
+    if($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET')
     {
         //Recebendo dados via URL para saber quem está solicitando e qual ação será realizada
         $component = strtoupper($_GET['component']);
         $action = strtoupper($_GET['action']);
+
+        /*echo($component);
+        die; força uma parada, o programa chega até ali e pra*/
 
         //Estrutura condicional para validar quem está solicitando algo para o router
         switch ($component)
@@ -40,7 +42,7 @@
                         //Verifica se o retorno é verdadeiro
                         if($resultado)
                             echo("<script>
-                                    alert ('Registro inserido com simples!');
+                                    alert ('Registro inserido com sucesso!');
                                     window.location.href = 'index.php'; //volta para o caminho indicado
                                   </script>");
                                   
@@ -52,7 +54,32 @@
                             </script>");
                     }
                         
-                }            
+                }elseif($action == 'DELETAR')
+                {
+                    //Recebe o id do registro que deverá ser excluido, que foi enviado pelo URL
+                    // no link da imagem do excluir que foi acionado na index 
+                    $idContato = $_GET['id'];
+
+                   $resposta = excluirContato($idContato);
+
+                   if(is_bool($resposta))
+                   {
+                       if($resposta)
+                       {
+                            echo("<script>
+                                    alert ('Registro excluído com sucesso!');
+                                    window.location.href = 'index.php'; //volta para o caminho indicado
+                                 </script>");
+                       }
+                   }elseif(is_array($resposta))
+                   {
+                    echo("<script>
+                            alert ('".$resultado["message"]."');
+                            window.history.back(); //volta para página anterior com os dados recuperados
+                         </script>");
+                   }
+                    
+                }  
                 break;
         }
 

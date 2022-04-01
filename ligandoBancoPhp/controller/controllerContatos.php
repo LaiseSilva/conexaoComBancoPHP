@@ -3,8 +3,8 @@
  * Objetivo: Arquivo responsável pela manipulação de dados de contatos
  *      obs(Este arquivo a ponte entre a view e a model)
  * Autor:
- *  Data: 04/03/2022  11/03/2022  18/03/2022  25/03/2022
- *  Versão: 1.0       2.0         3.0         4.0
+ *  Data: 04/03/2022  11/03/2022  18/03/2022  25/03/2022  01/04/2021
+ *  Versão: 1.0       2.0         3.0         4.0         5.0
 **********************************************************************/
 
 //Todos os tratamentos são feitos através da controller
@@ -92,5 +92,26 @@ function  listarContato ()
         return $false;
 }
 
+//Função para buscar um contato através do id do registro
+function buscarContato($id)
+{
+        //Validação para verificar se id contém um número válido
+        if($id != 0 && !empty($id) && is_numeric($id))
+        {
+            //Import arquivo de contato
+            require_once('model/bd/contato.php');
 
+            //Chama a função na model que vai buscar no BD
+            $dados = selectByIdContato($id);
+
+            //Valida se existem dados para serem devolvidos
+            if(!empty($dados))
+                return $dados;
+            else
+                return false;
+        }else
+            return array ('idErro'     => 4,
+                          'message'    => 'Não é possível buscar um registro sem informar um id válido');
+
+}
 ?>

@@ -3,8 +3,8 @@
      * Objetivo: Arquivo responsável por manipular os dados dentro do BD
      *          (insert,uptade,select e delete)
      * Autor: Laise na aula junto com o professor Marcel
-     * Data:11/03/2022   18/03/2022     25/03/2022
-     * Versão: 1.0       2.0            3.0
+     * Data:11/03/2022   18/03/2022     25/03/2022      01/04/2022
+     * Versão: 1.0       2.0            3.0             4.0
     **************************************************************************/
 
     //Estabelece a conexão com o BD
@@ -50,8 +50,6 @@
             return $statusResposta;
        
     }
-
-    
 
     //Função para realizar o uptade no BD
     function uptadeContato()
@@ -128,6 +126,43 @@
 
         }
 
+    }
+
+    //Função para buscar um contato no BD através do id do registro
+    function selectByIdContato($id)
+    {
+          //Abre a conexão com o BD
+          $conexao = conexaoMysql();
+
+          //script para listar o dado do BD
+          $sql = "select * from tblcontatos where idcontato =".$id;
+  
+          //Executa o script sql no BD e guarda o retorno dos dados, se houver
+          $result = mysqli_query($conexao, $sql);
+  
+          //Valida se o BD retornou registro
+          if($result)
+          {
+              //mysqli_fetch_assoc - permite converter os dados em um array para manipulação no php
+              //Nessa validação estamos, convertando os dados do BD em um array ($rsDados)              
+              if ($rsDados = mysqli_fetch_assoc($result))
+              {
+                  //Cria um array com os dados do BD
+                  $arrayDados = array (
+                      "id"       => $rsDados['idcontato'],
+                      "nome"     => $rsDados['nome'],
+                      "telefone" => $rsDados['telefone'],
+                      "celular"  => $rsDados['celular'],
+                      "email"    => $rsDados['email'],
+                      "obs"      => $rsDados['obs'],
+                  );
+              }
+  
+              //solicita o fechamneto da conexão com o BD
+              fecharConexaoMysql($conexao);
+  
+              return $arrayDados;
+          }
     }
 
 

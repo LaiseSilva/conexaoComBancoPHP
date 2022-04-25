@@ -3,8 +3,8 @@
      * Objetivo: Arquivo responsável por manipular os dados dentro do BD
      *          (insert,uptade,select e delete)
      * Autor: Laise na aula junto com o professor Marcel
-     * Data:11/03/2022   18/03/2022     25/03/2022      01/04/2022
-     * Versão: 1.0       2.0            3.0             4.0
+     * Data:11/03/2022   18/03/2022     25/03/2022      01/04/2022  08/04/2022
+     * Versão: 1.0       2.0            3.0             4.0         5.0
     **************************************************************************/
 
     //Estabelece a conexão com o BD
@@ -52,9 +52,37 @@
     }
 
     //Função para realizar o uptade no BD
-    function uptadeContato()
+    function uptadeContato($dadosContatos)
     {
+        //Declaração para variável para utilizar no return da função
+        $statusResposta = (boolean) false;
 
+        //Abre a conexão com o BD
+        $conexao = conexaoMysql();
+
+        //Monta o script para enviar para o BD
+        //Obs: números inteiros(int) não precisa de aspas simples
+        $sql = "update tblcontatos set
+                        nome       = '".$dadosContatos['nome']."',
+                        telefone   = '".$dadosContatos['telefone']."',
+                        celular    = '".$dadosContatos['celular']."',
+                        email      = '".$dadosContatos['email']."',
+                        obs        = '".$dadosContatos['obs']."'
+                where idcontato=".$dadosContatos['id'];
+
+        //Executa script no BD, manda para o banco
+            //Validação para verificar se o script sql está correto
+        if(mysqli_query($conexao, $sql))
+        {
+            //Validação para verificar se uma linha foi acrescentada no BD
+            if(mysqli_affected_rows($conexao))
+                $statusResposta = true;
+        }    
+        
+            //Solicita o fechamento da conexão com o BD
+            fecharConexaoMysql($conexao);
+
+            return $statusResposta;
     }
     
     //Função para excluir no BD

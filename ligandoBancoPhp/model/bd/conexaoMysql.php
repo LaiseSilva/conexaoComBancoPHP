@@ -48,3 +48,4 @@ function fecharConexaoMysql($conexao)
 {
     mysqli_close($conexao);
 }
+

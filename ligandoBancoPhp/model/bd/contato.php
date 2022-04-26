@@ -3,8 +3,8 @@
      * Objetivo: Arquivo responsável por manipular os dados dentro do BD
      *          (insert,uptade,select e delete)
      * Autor: Laise na aula junto com o professor Marcel
-     * Data:11/03/2022   18/03/2022     25/03/2022      01/04/2022  08/04/2022
-     * Versão: 1.0       2.0            3.0             4.0         5.0
+     * Data:11/03/2022   18/03/2022     25/03/2022      01/04/2022  08/04/2022  26/04/2022
+     * Versão: 1.0       2.0            3.0             4.0         5.0         6.0
     **************************************************************************/
 
     //Estabelece a conexão com o BD
@@ -27,13 +27,15 @@
                      telefone,
                      celular,
                      email,
-                     obs)
+                     obs,
+                     foto)
                 values
                     ('".$dadosContatos['nome']."',
                      '".$dadosContatos['telefone']."',
                      '".$dadosContatos['celular']."',
                      '".$dadosContatos['email']."',
-                     '".$dadosContatos['obs']."');";
+                     '".$dadosContatos['obs']."',
+                     '".$dadosContatos['foto']."');";
 
         //Executa script no BD, manda para o banco
             //Validação para verificar se o script sql está correto
@@ -142,6 +144,7 @@
                     "celular"  => $rsDados['celular'],
                     "email"    => $rsDados['email'],
                     "obs"      => $rsDados['obs'],
+                    "foto"     => $rsDados['foto'],
                 );
 
                 $cont++;

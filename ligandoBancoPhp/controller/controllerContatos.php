@@ -3,8 +3,8 @@
  * Objetivo: Arquivo responsável pela manipulação de dados de contatos
  *      obs(Este arquivo a ponte entre a view e a model)
  * Autor:
- *  Data: 04/03/2022  11/03/2022  18/03/2022  25/03/2022  01/04/2022   08/04/2022
- *  Versão: 1.0       2.0         3.0         4.0         5.0          6.0
+ *  Data: 04/03/2022  11/03/2022  18/03/2022  25/03/2022  01/04/2022   08/04/2022   26/04/2022
+ *  Versão: 1.0       2.0         3.0         4.0         5.0          6.0          7.0
 ****************************************************************************************/
 
 //Todos os tratamentos são feitos através da controller
@@ -13,6 +13,9 @@
 //Função para receber dados da view e encaminhar para a model(inserir)
 function  inserirContato ($dadosContatos, $file)
 {
+    //Caso não tenha uma imagem ela se mantém null e não da erro
+    $nomeFoto = (string) null;
+
     //Validação para verificar se o objeto está vazio
     if(!empty($dadosContatos))
     {
@@ -20,12 +23,22 @@ function  inserirContato ($dadosContatos, $file)
         //Validação de caixa vazias dos elementos nome, celular e email, pois são obrigatórios no BD
         if(!empty($dadosContatos['txtNome']) && !empty($dadosContatos['txtCelular']) && !empty($dadosContatos['txtEmail']))
         {
+            //Validação para identificar se chegou um arquivo de upload 
             if($file != null)
             {
+                //Importe da função upload
                 require_once('modulo/upload.php');
-                $resultado = uploadFile($file['fleFoto']);
-                echo($resultado);
-                die;
+
+                //Chama a função de upload
+                $nomeFoto = uploadFile($file['fleFoto']);
+                
+                if(is_array($nomeFoto))
+                {
+                    //Caso acontece algum erro no processo de upload, a função irá retornar um array com a possível mensagem de erro.
+                    //Esse array será retornado para a router e ela íra exibir a mensagem para o usuário
+                    return $nomeFoto;
+                }
+
             }
 
             //Criação do array de dados que será encaminhado a model para inserir no BD
@@ -37,7 +50,8 @@ function  inserirContato ($dadosContatos, $file)
                 "telefone" => $dadosContatos['txtTelefone'],
                 "celular"  => $dadosContatos['txtCelular'],
                 "email"    => $dadosContatos['txtEmail'],
-                "obs"      => $dadosContatos['txtObs']
+                "obs"      => $dadosContatos['txtObs'],
+                "foto"     => $nomeFoto
             );
 
             //Importe do arquivo de modelagem para manipular o BD

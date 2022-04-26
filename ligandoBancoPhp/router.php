@@ -6,8 +6,8 @@
  *           view: (dados de um form,listagem de dados, ação de excluir ou atualizar)
  *           Esse arquivo será responsável  para encaminhar as solicitações para a Controller
  * Autor: Laise junto com o professor Marcel
- * Data: 04/03/2022   11/03/2022    18/03/2022    25/03/2022    01/04/2022      08/04/2022
- * Versão: 1.0        2.0           3.0           4.0           5.0             6.0
+ * Data: 04/03/2022   11/03/2022    18/03/2022    25/03/2022    01/04/2022      08/04/2022  26/04/2022
+ * Versão: 1.0        2.0           3.0           4.0           5.0             6.0         7.0
  ***********************************************************************************************************/
 
 $action = (string) null; // a ação que irá acontecer
@@ -40,8 +40,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET')
                     $resultado = inserirContato($_POST, null);
                 }
               
-                
-
                 //Valida o tipo de dados que a controller retornou
                 if (is_bool($resultado)) //Se for booleano
                 {

@@ -1,8 +1,14 @@
 <?php
 
+    //Importe do arquivo de configurações do projeto
+    require_once('modulo/config.php');
+
     //Essa váriavel foi criada para diferenciar no action do formulário qual ação deveria sere levada para a router
             //(inserir ou editar), nas condições abaixo, mudamos a action dessa váriavel para a ação de editar 
     $form = (string) "router.php?component=contatos&action=inserir";
+    
+    //Variável para carregar o nome da foto do banco de dados
+    $foto = (string) null;
 
     //Valida se a utilização de variáveis de sessão está ativa no servidor, por padrão é falsa
     if(session_status())
@@ -16,9 +22,10 @@
             $celular    = $_SESSION['dadosContato']['celular'];
             $email      = $_SESSION['dadosContato']['email'];
             $obs        = $_SESSION['dadosContato']['obs'];
+            $foto       = $_SESSION['dadosContato']['foto'];
 
             //Mudamos a action da form para editar o registro no click do botão
-            $form = "router.php?component=contatos&action=editar&id=".$id;
+            $form = "router.php?component=contatos&action=editar&id=".$id."&foto=".$foto;
 
             //Destrói uma váriavel
             unset($_SESSION['dadosContato']);
@@ -99,6 +106,10 @@
                             <textarea name="txtObs" cols="50" rows="7"><?=isset($obs)?$obs:null?></textarea>
                         </div>
                     </div>
+                    <div class="campos">
+                        <img src="<?=DIRETORIO_FILE_UPLOAD.$foto?>">
+                    </div>
+
                     <div class="enviar">
                         <div class="enviar">
                             <input type="submit" name="btnEnviar" value="Salvar">
@@ -132,20 +143,22 @@
                     //estrutura de repetição para retornar os dados do array e printar na tela
                     foreach($listContato as $item)
                     {
+                        //Váriavel para carregar a foto que veio do BD
+                        $foto = $item['foto'];
                
                ?>
                 <tr id="tblLinhas">
                     <td class="tblColunas registros"><?=$item['nome']?></td>
                     <td class="tblColunas registros"><?=$item['celular']?></td>
                     <td class="tblColunas registros"><?=$item['email']?></td>
-                    <td class="tblColunas registros"><img src="arquivos/<?=$item['foto']?>" class="foto"></td>
+                    <td class="tblColunas registros"><img src="<?=DIRETORIO_FILE_UPLOAD.$foto?>" class="foto"></td>
                    
                     <td class="tblColunas registros">
 
                         <a href="router.php?component=contatos&action=buscar&id=<?=$item['id']?>">
                             <img src="img/edit.png" alt="Editar" title="Editar" class="editar">
                         </a>
-                            <a onclick="return confirm('Deseja realmente excluir esse dado?');" href="router.php?component=contatos&action=deletar&id=<?=$item['id']?>">
+                            <a onclick="return confirm('Deseja realmente excluir esse dado?');" href="router.php?component=contatos&action=deletar&id=<?=$item['id']?>&foto=<?=$foto?>">
                                 
                                 <img src="img/trash.png" alt="Excluir" title="Excluir" class="excluir">
                             </a>

@@ -24,7 +24,7 @@ function  inserirContato ($dadosContatos, $file)
         if(!empty($dadosContatos['txtNome']) && !empty($dadosContatos['txtCelular']) && !empty($dadosContatos['txtEmail']))
         {
             //Validação para identificar se chegou um arquivo de upload 
-            if($file != null)
+            if($file['fleFoto']['name'] != null)
             {
                 //Importe da função upload
                 require_once('modulo/upload.php');
@@ -73,8 +73,19 @@ function  inserirContato ($dadosContatos, $file)
 }
 
 //Função para receber dados da view e encaminhar para a model(atualizar)
-function  atualizarContato ($dadosContatos, $id)
+function  atualizarContato ($dadosContatos, $arrayDados)
 {
+
+    //Recebe o id enviado pelo arrayDados
+    $id = $arrayDados['id'];
+
+    //Recebe a foto enviada pelo array dados(nome da foto que já existe no BD)
+    $foto = $arrayDados['foto'];
+
+    //Recebe o objeto de array referente a nova foto que poderá ser enviada ao servidor
+    $file = $arrayDados['files'];
+
+
     //Validação para verificar se o objeto está vazio
     if(!empty($dadosContatos))
     {
@@ -88,13 +99,28 @@ function  atualizarContato ($dadosContatos, $id)
                 //importante criar este array conforme as necessidades de manipulação do array
                 /*OBS: criar as chaves do array conforme os nomes dos atributos do BD */
 
+                //Validação para identificar se será enviado ao servidor uma nova foto
+                if($file['fleFoto']['name'] != null)
+                {
+                    //Importe da função upload
+                    require_once('modulo/upload.php');
+
+                    //Chama a função de upload para enviar a nova foto ao servidor
+                    $novaFoto = uploadFile($file['fleFoto']);
+                }else
+                {
+                    //Permanece a mesma foto no BD
+                    $novaFoto = $foto;
+                }
+                
                 $arrayDados = array(
                     "id"       => $id,
                     "nome"     => $dadosContatos['txtNome'],
                     "telefone" => $dadosContatos['txtTelefone'],
                     "celular"  => $dadosContatos['txtCelular'],
                     "email"    => $dadosContatos['txtEmail'],
-                    "obs"      => $dadosContatos['txtObs']
+                    "obs"      => $dadosContatos['txtObs'],
+                    "foto"     => $novaFoto
                 );
 
                 //Importe do arquivo de modelagem para manipular o BD
@@ -102,7 +128,11 @@ function  atualizarContato ($dadosContatos, $id)
 
                 //Chama a função que fará a atualização no BD (está função esta na model)
                 if(uptadeContato($arrayDados))
+                {
+                    unlink(DIRETORIO_FILE_UPLOAD.$foto);
                     return true;
+                }
+                    
                 else
                     //retorna o array com uma mensagem e o tipo de erro, melhor forma
                     return array('idErro'  => 1,
@@ -119,8 +149,13 @@ function  atualizarContato ($dadosContatos, $id)
 }
 
 //Função para realizaar a exclusão de um contato
-function  excluirContato ($id)
+function  excluirContato ($arrayDados)
 {
+    //Recebe o id do registro que será excluído
+    $id = $arrayDados['id'];
+    
+    //Recebe o nome da foto que será excluída da pasta do servidor
+    $foto = $arrayDados['foto'];
 
     //Validação para verificar se id contém um número válido
     if($id != 0 && !empty($id) && is_numeric($id))
@@ -128,9 +163,26 @@ function  excluirContato ($id)
         //Import arquivo de contato
         require_once('model/bd/contato.php');
 
+        //Importe do arquivo de configurações do projeto
+        require_once('modulo/config.php');
+
         //Chama a função da model e valida se o retorno foi verdadeiro ou falso
         if (deleteContato($id))
-            return true;
+        {
+            //validação para caso a foto não exista com registro
+            if($foto!=null){
+                //unlik() - função para apagar um arquivo de um diretório
+                //Permite apagar a foto fisicamente do diretório no servidor
+                if(unlink(DIRETORIO_FILE_UPLOAD.$foto))
+                    return true;
+                else
+                    return array ('idErro'  => 5,
+                                'message' => 'O registro do banco de dados foi excluído com sucesso,
+                                                porém a imagem não foi excluída do diretório do servidor');
+            }else
+                return true;
+        }
+           
         else
             return array ('idErro'  => 3,
                           'message' => 'O banco de dados não pode excluir o registro');

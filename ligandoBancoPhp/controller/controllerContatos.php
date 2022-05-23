@@ -10,6 +10,8 @@
 
 //Todos os tratamentos são feitos através da controller
 
+// require_once($_SERVER['DOCUMENT_ROOT'] . '/leila/conexaoBancoPhp/modulo/config.php');
+
 //Importe do arquivo de configuração do projeto
 require_once('modulo/config.php');
 
@@ -54,7 +56,7 @@ function  inserirContato($dadosContatos, $file)
             );
 
             //Importe do arquivo de modelagem para manipular o BD
-            require_once('model/bd/contato.php');
+            require_once(SRC . 'model/bd/contato.php');
 
             //Chama a função que fará o insert no BD (está função esta na model)
             if (insertContato($arrayDados))
@@ -205,7 +207,7 @@ function  excluirContato($arrayDados)
 function  listarContato()
 {
     //Importe do arquivo que vai buscar os dados no BD
-    require_once('model/bd/contato.php');
+    require_once(SRC . 'model/bd/contato.php');
 
     //Chama a função que vai buscar os dados no BD
     $dados = selectAllContatos();
@@ -222,7 +224,7 @@ function buscarContato($id)
     //Validação para verificar se id contém um número válido
     if ($id != 0 && !empty($id) && is_numeric($id)) {
         //Import arquivo de contato
-        require_once('model/bd/contato.php');
+        require_once(SRC . 'model/bd/contato.php');
 
         //Chama a função na model que vai buscar no BD
         $dados = selectByIdContato($id);

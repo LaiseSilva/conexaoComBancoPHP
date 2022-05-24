@@ -10,10 +10,10 @@
 
 //Todos os tratamentos são feitos através da controller
 
-// require_once($_SERVER['DOCUMENT_ROOT'] . '/leila/conexaoBancoPhp/modulo/config.php');
+require_once(SRC.'/modulo/config.php');
 
 //Importe do arquivo de configuração do projeto
-require_once('modulo/config.php');
+//require_once('modulo/config.php');
 
 //Função para receber dados da view e encaminhar para a model(inserir)
 function  inserirContato($dadosContatos, $file)
@@ -170,10 +170,10 @@ function  excluirContato($arrayDados)
     //Validação para verificar se id contém um número válido
     if ($id != 0 && !empty($id) && is_numeric($id)) {
         //Import arquivo de contato
-        require_once('model/bd/contato.php');
+        require_once(SRC .'/model/bd/contato.php');
 
         //Importe do arquivo de configurações do projeto
-        require_once('modulo/config.php');
+        //require_once('modulo/config.php');
 
         //Chama a função da model e valida se o retorno foi verdadeiro ou falso
         if (deleteContato($id)) {
@@ -181,7 +181,7 @@ function  excluirContato($arrayDados)
             if ($foto != null) {
                 //unlik() - função para apagar um arquivo de um diretório
                 //Permite apagar a foto fisicamente do diretório no servidor
-                if (unlink(DIRETORIO_FILE_UPLOAD . $foto))
+                if (@unlink(SRC.DIRETORIO_FILE_UPLOAD . $foto))
                     return true;
                 else
                     return array(
@@ -206,8 +206,9 @@ function  excluirContato($arrayDados)
 //Função para solicitar os dados da model e encaminhar a lista de contatos para a view
 function  listarContato()
 {
+
     //Importe do arquivo que vai buscar os dados no BD
-    require_once(SRC . 'model/bd/contato.php');
+    require_once(SRC . '/model/bd/contato.php');
 
     //Chama a função que vai buscar os dados no BD
     $dados = selectAllContatos();
@@ -224,7 +225,7 @@ function buscarContato($id)
     //Validação para verificar se id contém um número válido
     if ($id != 0 && !empty($id) && is_numeric($id)) {
         //Import arquivo de contato
-        require_once(SRC . 'model/bd/contato.php');
+        require_once(SRC . '/model/bd/contato.php');
 
         //Chama a função na model que vai buscar no BD
         $dados = selectByIdContato($id);

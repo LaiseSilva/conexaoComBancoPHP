@@ -12,10 +12,11 @@
 
  const EXT_FILE_UPLOAD = array("image/jpg", "image/jpeg", "image/gif", "image/png");
  
- const DIRETORIO_FILE_UPLOAD = "arquivos/";
+ const DIRETORIO_FILE_UPLOAD = "/arquivos/";
+
 
  //diretorio raiz do projeto
- define('SRC', $_SERVER['DOCUMENT_ROOT'].'');
+ define('SRC', $_SERVER['DOCUMENT_ROOT'].'/Laise/LigacaoComBanco/ligandoBancoPhp');
 
  //função para converter um array em formato json
  function createJSON($arrayDados)

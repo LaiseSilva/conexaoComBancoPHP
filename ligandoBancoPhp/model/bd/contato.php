@@ -201,10 +201,12 @@
   
               //solicita o fechamneto da conexão com o BD
               fecharConexaoMysql($conexao);
+
+              if(isset($arrayDados))
+                return $arrayDados;
+              else
+                return false;
   
-              return $arrayDados;
+              
           }
     }
-
-
-?>

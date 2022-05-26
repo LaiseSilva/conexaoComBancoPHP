@@ -16,23 +16,27 @@ require_once(SRC.'/modulo/config.php');
 //require_once('modulo/config.php');
 
 //Função para receber dados da view e encaminhar para a model(inserir)
-function  inserirContato($dadosContatos, $file)
+function  inserirContato($dadosContatos)
 {
     //Caso não tenha uma imagem ela se mantém null e não da erro
     $nomeFoto = (string) null;
 
     //Validação para verificar se o objeto está vazio
     if (!empty($dadosContatos)) {
+
+        //Recebe o objeto imagem que foi encaminhado dentro do array
+        $file = $dadosContatos['file'];
+
         //os nomes dados no input no html, se tornam chaves do array e o conteúdo digitado se torna o valor
         //Validação de caixa vazias dos elementos nome, celular e email, pois são obrigatórios no BD
-        if (!empty($dadosContatos['txtNome']) && !empty($dadosContatos['txtCelular']) && !empty($dadosContatos['txtEmail']) && !empty($dadosContatos['sltEstado'])) {
+        if (!empty($dadosContatos[0]['nome']) && !empty($dadosContatos[0]['celular']) && !empty($dadosContatos[0]['email']) && !empty($dadosContatos[0]['estado'])) {
             //Validação para identificar se chegou um arquivo de upload 
-            if ($file['fleFoto']['name'] != null) {
+            if ($file['foto']['name'] != null) {
                 //Importe da função upload
-                require_once('modulo/upload.php');
+                require_once(SRC .'modulo/upload.php');
 
                 //Chama a função de upload
-                $nomeFoto = uploadFile($file['fleFoto']);
+                $nomeFoto = uploadFile($file['foto']);
 
                 if (is_array($nomeFoto)) {
                     //Caso acontece algum erro no processo de upload, a função irá retornar um array com a possível mensagem de erro.
@@ -46,13 +50,13 @@ function  inserirContato($dadosContatos, $file)
             /*OBS: criar as chaves do array conforme os nomes dos atributos do BD */
 
             $arrayDados = array(
-                "nome"     => $dadosContatos['txtNome'],
-                "telefone" => $dadosContatos['txtTelefone'],
-                "celular"  => $dadosContatos['txtCelular'],
-                "email"    => $dadosContatos['txtEmail'],
-                "obs"      => $dadosContatos['txtObs'],
+                "nome"     => $dadosContatos[0]['nome'],
+                "telefone" => $dadosContatos[0]['telefone'],
+                "celular"  => $dadosContatos[0]['celular'],
+                "email"    => $dadosContatos[0]['email'],
+                "obs"      => $dadosContatos[0]['obs'],
                 "foto"     => $nomeFoto,
-                "idEstado" => $dadosContatos['sltEstado']
+                "idEstado" => $dadosContatos[0]['estado']
             );
 
             //Importe do arquivo de modelagem para manipular o BD

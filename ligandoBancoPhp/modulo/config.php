@@ -16,7 +16,7 @@
 
 
  //diretorio raiz do projeto
- define('SRC', $_SERVER['DOCUMENT_ROOT'].'/Laise/LigacaoComBanco/ligandoBancoPhp');
+ define('SRC', $_SERVER['DOCUMENT_ROOT'].'/Laise/LigacaoComBanco/ligandoBancoPhp/');
 
  //função para converter um array em formato json
  function createJSON($arrayDados)

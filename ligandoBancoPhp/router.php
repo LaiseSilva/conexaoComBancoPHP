@@ -124,13 +124,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || $_SERVER['REQUEST_METHOD'] == 'GET')
 
                 //Cria um array contendo o id e nome da foto para enviar a controller 
                 $arrayDados = array(
+                    $_POST,
                     "id"    => $idContato,
                     "foto"  => $foto,
                     "files" => $_FILES
                 );
 
                 //Chama a função de editar na controller
-                $resultado = atualizarContato($_POST, $arrayDados);
+                $resultado = atualizarContato($arrayDados);
 
                 //Valida o tipo de dados que a controller retornou
                 if (is_bool($resultado)) //Se for booleano
